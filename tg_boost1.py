@@ -14,24 +14,22 @@ list.close()
 
 def fetchData(channel='google', post='1', proxy=None):
 	try:
-		r = requests.get('https://t.me/'+channel+'/'+post+'?embed=1', timeout=20, proxies={'https':proxy})
-		cookie = r.headers['set-cookie'].split(';')[0]
-		key = r.text.split('data-view="')[1].split('"')[0]
-		if 'stel_ssid' in cookie: 
-			return {'key':key,'cookie':cookie}
-		else:
-			return False
-	except Exception as e:
-		return False
+		r = requests.request("GET", url, params=querystring, proxies={'https':proxy})
+cookie = r.headers['set-cookie'].split(';')[0]
+key = r.text.split('data-view="')[1].split('"')[0]
+if 'stel_ssid' in cookie: 
+  return {'key':key,'cookie':cookie}
+else:
+  return False
 		
 def addViewToPost(channel='google', post='1', key=None, cookie=None, proxy=None):
 	try:
-		r = requests.get('https://t.me/'+channel+'/'+post+'?embed=1&view='+key, timeout=20, headers={
-		'x-requested-with':'XMLHttpRequest',
-		'user-agent':'Mozilla/5.0 (Windows NT 6.2; Win64; x64; rv:59.0) Gecko/20100101 Firefox/59.0',
-		'referer':'https://t.me/'+channel+'/'+post+'?embed=1',
-		'cookie':cookie}, proxies={'https':proxy}
-		)
+		r = requests.get('https://t.me/v/?views=' + key, timeout=20, headers={
+'x-requested-with':'XMLHttpRequest',
+'user-agent':'Mozilla/5.0 (Windows NT 6.2; Win64; x64; rv:59.0) Gecko/20100101 Firefox/59.0',
+'referer':'https://t.me/'+channel+'/'+post+'?embed=1',
+'cookie':cookie}, proxies={'https':proxy}
+)
 		return r.text
 	except Exception as e:
 		return False
